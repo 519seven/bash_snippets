@@ -12,7 +12,8 @@ export COLORFGBG='default;default'
 
 shopt -s checkwinsize
 #eval "$(dircolors -b /etc/dircolors)"
-eval "$(dircolors -b ~/.dircolors)"
+# Adding 2>/dev/null for macOS support since dircolors isn't readily available
+eval "$(dircolors -b ~/.dircolors 2>/dev/null)"
 
 # Aliases
 alias ls='ls -h --color=auto'
