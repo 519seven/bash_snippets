@@ -17,11 +17,11 @@ checkYear () {
 	fi
 }
 checkTopic () {
-	if [[ "$1" =~ .*"Minute".* ]]; then
+	if [[ "$1" =~ .*"minute".* ]] || [[ "$1" =~ .*"annual".* ]] || [[ "$1" =~ .*"meeting".* ]]; then
 		TOPIC=minutes
-	elif [[ "$1" =~ .*"Newsletter".* ]]; then
+	elif [[ "$1" =~ .*"newsletter".* ]]; then
 		TOPIC=newsletters
-	elif [[ "$1" =~ .*"Document".* ]]; then
+	elif [[ "$1" =~ .*"document".* ]]; then
 		TOPIC=documents
 	else
 		>&2 echo "File $1 did not match; is the topic included in the name?"
@@ -69,8 +69,8 @@ for i in $(find $SOURCE -type f); do
 	# convert to lowercase
 	li=$(echo "$i" | tr '[:upper:]' '[:lower:]')
 	checkAssoc "$li"
-	checkYear "$i"
-	checkTopic "$i"
+	checkYear "$li"
+	checkTopic "$li"
 	if [[ -z $ASSOC ]] || [[ -z $YEAR ]] || [[ -z $TOPIC ]]; then
 		>&2 echo "Variable is unset: |$ASSOC|$YEAR|$TOPIC|"
 		>&2 echo "File $i did not allow us to match something known."	# http://www.tldp.org/LDP/abs/html/io-redirection.html
