@@ -2,6 +2,8 @@
 exec 1> >(logger -s -t $(basename $0)) 2>&1
 # https://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
 
+# The pattern were looking for is <hoa> <docsubject> <yyyy> <mm> <dd>.{pdf,doc}
+
 TARGET=/var/www/html/wp-content/uploads
 SOURCE=~ithelper/Site_Files
 
@@ -27,31 +29,31 @@ checkTopic () {
 	
 }
 checkAssoc () {
-	if [[ ""$1"" =~ .*"Berkshire".* ]] || [[ "$1" =~ .*"Berkshire[[:space:]]Landing".* ]]; then
+	if [[ "$1" =~ .*"berkshire".* ]] || [[ "$1" =~ .*"berkshire[[:space:]]landing".* ]]; then
 		ASSOC="berkshirelanding"
-	elif [[ "$1" =~ .*"Branchlands".* ]] || [[ "$1" =~ .*"Branch[[:space:]]Lands".* ]]; then
+	elif [[ "$1" =~ "bpoa" ]] || [[ "$1" =~ .*"branchlands".* ]] || [[ "$1" =~ .*"branch[[:space:]]lands".* ]]; then
 		ASSOC=branchlands
-	elif [[ "$1" =~ .*"ChathamRidge".* ]] || [[ "$1" =~ .*"Chatham[[:space:]]Ridge".* ]]; then
+	elif [[ "$1" =~ .*"chathamridge".* ]] || [[ "$1" =~ .*"chatham[[:space:]]ridge".* ]]; then
 		ASSOC=chathamridge
-	elif [[ "$1" =~ .*"Creekside".* ]] || [[ "$1" =~ .*"VHMCOA".* ]]; then
+	elif [[ "$1" =~ .*"creekside".* ]] || [[ "$1" =~ .*"vhmcoa".* ]]; then
 		ASSOC=creekside
-	elif [[ "$1" =~ .*"DruidHill".* ]] || [[ "$1" =~ .*"Druid[[:space:]]Hill".* ]]; then
+	elif [[ "$1" =~ .*"druidhill".* ]] || [[ "$1" =~ .*"druid[[:space:]]hill".* ]]; then
 		ASSOC=druidhill
-	elif [[ "$1" =~ .*"HuntingtonVillage".* ]] || [[ "$1" =~ .*"Huntington[[:space:]]Village".* ]]; then
+	elif [[ "$1" =~ .*"huntingtonvillage".* ]] || [[ "$1" =~ .*"huntington[[:space:]]village".* ]]; then
 		ASSOC=huntingtonvillage
-	elif [[ "$1" =~ .*"LaurelPark".* ]] || [[ "$1" =~ .*"Laurel[[:space:]]Park".* ]]; then
+	elif [[ "$1" =~ .*"laurelpark".* ]] || [[ "$1" =~ .*"laurel[[:space:]]park".* ]]; then
 		ASSOC=laurelpark
-	elif [[ "$1" =~ .*"RiverRun".* ]] || [[ "$1" =~ .*"River[[:space:]]Run".* ]]; then
+	elif [[ "$1" =~ .*"riverrun".* ]] || [[ "$1" =~ .*"river[[:space:]]run".* ]]; then
 		ASSOC=riverrun
-	elif [[ "$1" =~ .*"SolomonCourt".* ]] || [[ "$1" =~ .*"Solomon[[:space:]]Court".* ]]; then
+	elif [[ "$1" =~ .*"solomoncourt".* ]] || [[ "$1" =~ .*"solomon[[:space:]]court".* ]]; then
 		ASSOC=solomoncourt
-	elif [[ "$1" =~ .*"SomerChase".* ]] || [[ "$1" =~ .*"Somer[[:space:]]Chase".* ]]; then
+	elif [[ "$1" =~ .*"somerchase".* ]] || [[ "$1" =~ .*"somer[[:space:]]chase".* ]]; then
 		ASSOC=somerchase
-	elif [[ "$1" =~ .*"VillageHomesIII".* ]] || [[ "$1" =~ .*"Village[[:space:]]Homes[[:space:]]III".* ]]; then
+	elif [[ "$1" =~ .*"villagehomesiii".* ]] || [[ "$1" =~ .*"village[[:space:]]homes[[:space:]]iii".* ]]; then
 		ASSOC=villagehomesiii
-	elif [[ "$1" =~ .*"VillageHomeIV".* ]] || [[ "$1" =~ .*"Village[[:space:]]Homes[[:space:]]IV".* ]]; then 	
+	elif [[ "$1" =~ .*"villagehomeiv".* ]] || [[ "$1" =~ .*"village[[:space:]]homes[[:space:]]iv".* ]]; then 	
 		ASSOC=villagehomesiv
-	elif [[ "$1" =~ .*"Villas".* ]] || [[ "$1" =~ .*"Villas[[:space:]]At[[:space:]]Southern[[:space:]]Ridge".* ]]; then
+	elif [[ "$1" =~ .*"villas".* ]] || [[ "$1" =~ .*"villas[[:space:]]at[[:space:]]southern[[:space:]]ridge".* ]]; then
 		ASSOC=villasatsouthernridge
 	else
 		>&2 echo "File $1 did not match; is this a new association or is the filename pattern wrong?"
@@ -64,7 +66,9 @@ for i in $(find $SOURCE -type f); do
 	ASSOC=
 	YEAR=
 	TOPIC=
-	checkAssoc "$i"
+	# convert to lowercase
+	li=$(echo "$i" | tr '[:upper:]' '[:lower:]')
+	checkAssoc "$li"
 	checkYear "$i"
 	checkTopic "$i"
 	if [[ -z $ASSOC ]] || [[ -z $YEAR ]] || [[ -z $TOPIC ]]; then
